@@ -377,7 +377,7 @@ navDots.forEach(d=>d.addEventListener('click',()=>{sections[parseInt(d.dataset.s
 window.addEventListener('scroll',updateNav,{passive:true});
 
 // ===== Reveal =====
-new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.15}).observe(document);
+const revealObserver=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.15});document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
 
 // ===== Charts =====
 Chart.defaults.color='#8899aa';Chart.defaults.borderColor='#1e2d3d';Chart.defaults.font.family="'Segoe UI','PingFang SC',sans-serif";
