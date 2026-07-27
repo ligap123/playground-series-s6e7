@@ -1,13 +1,14 @@
 <!--
-  Predicting Student Health Risk 鈥?浜や簰寮忓彲瑙嗗寲鍒嗘瀽鎶ュ憡
+  Predicting Student Health Risk — 交互式可视化分析报告
   Kaggle Playground S6E7 | Public Score: 0.94918
-  鍙欎簨閫昏緫: 鏄粈涔?鈫?鏈変粈涔?鈫?鍙戠幇浜嗕粈涔?鈫?鍋氫簡浠€涔?鈫?寰楀埌浜嗕粈涔?-->
+  叙事逻辑: 是什么 → 有什么 → 发现了什么 → 做了什么 → 得到了什么
+-->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Predicting Student Health Risk 鈥?椤圭洰鍒嗘瀽鎶ュ憡</title>
+<title>Predicting Student Health Risk — 项目分析报告</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js">
 </script>
 <style>
@@ -115,158 +116,159 @@ h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;color:var(--text-primary)}
 <body>
 
 <div class="scroll-bar" id="scrollBar"></div>
-<nav class="nav-dots" aria-label="椤甸潰瀵艰埅">
-  <button class="nav-dot active" data-section="0" title="棣栭〉"></button>
-  <button class="nav-dot" data-section="1" title="鏁版嵁"></button>
-  <button class="nav-dot" data-section="2" title="鎺㈢储"></button>
-  <button class="nav-dot" data-section="3" title="鐗瑰緛"></button>
-  <button class="nav-dot" data-section="4" title="妯″瀷"></button>
-  <button class="nav-dot" data-section="5" title="缁撴灉"></button>
-  <button class="nav-dot" data-section="6" title="杩囩▼"></button>
+<nav class="nav-dots" aria-label="页面导航">
+  <button class="nav-dot active" data-section="0" title="首页"></button>
+  <button class="nav-dot" data-section="1" title="数据"></button>
+  <button class="nav-dot" data-section="2" title="探索"></button>
+  <button class="nav-dot" data-section="3" title="特征"></button>
+  <button class="nav-dot" data-section="4" title="模型"></button>
+  <button class="nav-dot" data-section="5" title="结果"></button>
+  <button class="nav-dot" data-section="6" title="过程"></button>
 </nav>
 
-<!-- ===== HERO: 杩欐槸浠€涔?===== -->
+<!-- ===== HERO: 这是什么 ===== -->
 <section class="section hero-section" id="s0">
 <div class="container hero-content reveal">
-  <h1>棰勬祴澶у鐢?span class="hl">鍋ュ悍椋庨櫓</span></h1>
+  <h1>预测大学生<span class="hl">健康风险</span></h1>
   <p class="hero-subtitle">
-    鍩轰簬瀛︾敓鐨勭潯鐪犮€佽繍鍔ㄣ€侀ギ椋熴€佽韩浣撴寚鏍囩瓑澶氱淮鏁版嵁锛屽皢鍋ュ悍鐘跺喌鍒嗕负涓夌被锛?br>
-    <span style="color:var(--accent-red)">at-risk 楂橀闄?/span> 路 
-    <span style="color:var(--accent-amber)">unhealthy 涓嶅仴搴?/span> 路 
-    <span style="color:var(--accent-green)">fit 鍋ュ悍</span>
+    基于学生的睡眠、运动、饮食、身体指标等多维数据，将健康状况分为三类：<br>
+    <span style="color:var(--accent-red)">at-risk 高风险</span> · 
+    <span style="color:var(--accent-amber)">unhealthy 不健康</span> · 
+    <span style="color:var(--accent-green)">fit 健康</span>
   </p>
   <div class="hero-meta">
-    <span>璁粌鏍锋湰 <strong>690,088</strong></span>
-    <span>鍘熷鐗瑰緛 <strong>13</strong> 涓?/span>
-    <span>娴嬭瘯鏍锋湰 <strong>295,753</strong></span>
+    <span>训练样本 <strong>690,088</strong></span>
+    <span>原始特征 <strong>13</strong> 个</span>
+    <span>测试样本 <strong>295,753</strong></span>
   </div>
 </div>
 </section>
 
-<!-- ===== 鏁版嵁姒傝: 鏈変粈涔?===== -->
+<!-- ===== 数据概览: 有什么 ===== -->
 <section class="section" id="s1" style="background:var(--bg-card)">
 <div class="container">
-  <span class="section-label reveal">01 路 鎴戜滑鏈変粈涔堟暟鎹?/span>
-  <h2 class="reveal">13 涓壒寰侊紝69 涓囨潯璁板綍锛? 涓被鍒?/h2>
+  <span class="section-label reveal">01 · 我们有什么数据</span>
+  <h2 class="reveal">13 个特征，69 万条记录，3 个类别</h2>
 
   <div class="stat-row reveal delay-1" style="margin-top:24px">
-    <div class="stat-box"><div class="num" style="color:var(--accent-green)">690,088</div><div class="lbl">璁粌鏍锋湰鏁?/div></div>
-    <div class="stat-box"><div class="num" style="color:var(--accent-blue)">13</div><div class="lbl">鍘熷鐗瑰緛</div></div>
-    <div class="stat-box"><div class="num" style="color:var(--accent-amber)">3</div><div class="lbl">鐩爣绫诲埆</div></div>
-    <div class="stat-box"><div class="num" style="color:var(--accent-red)">91.71 MB</div><div class="lbl">鏁版嵁鎬婚噺</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--accent-green)">690,088</div><div class="lbl">训练样本数</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--accent-blue)">13</div><div class="lbl">原始特征</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--accent-amber)">3</div><div class="lbl">目标类别</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--accent-red)">91.71 MB</div><div class="lbl">数据总量</div></div>
   </div>
 
   <div class="grid2 reveal delay-2" style="margin-top:16px">
     <div class="card">
-      <h3 style="color:var(--accent-green)">鏁板€肩壒寰?(7 涓?</h3>
-      <p>sleep_duration 路 heart_rate 路 bmi 路 calorie_expenditure 路 step_count 路 exercise_duration 路 water_intake</p>
-      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">鐫＄湢鏃堕暱銆佸績鐜囥€佽韩浣撹川閲忔寚鏁般€佸崱璺噷娑堣€椼€佹鏁般€佽繍鍔ㄦ椂闀裤€侀ギ姘撮噺</p>
+      <h3 style="color:var(--accent-green)">数值特征 (7 个)</h3>
+      <p>sleep_duration · heart_rate · bmi · calorie_expenditure · step_count · exercise_duration · water_intake</p>
+      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">睡眠时长、心率、身体质量指数、卡路里消耗、步数、运动时长、饮水量</p>
     </div>
     <div class="card">
-      <h3 style="color:var(--accent-amber)">绫诲埆鐗瑰緛 (6 涓?</h3>
-      <p>diet_type 路 stress_level 路 sleep_quality 路 physical_activity_level 路 smoking_alcohol 路 gender</p>
-      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">楗绫诲瀷銆佸帇鍔涙按骞炽€佺潯鐪犺川閲忋€佽繍鍔ㄦ按骞炽€佺儫閰掍範鎯€佹€у埆</p>
+      <h3 style="color:var(--accent-amber)">类别特征 (6 个)</h3>
+      <p>diet_type · stress_level · sleep_quality · physical_activity_level · smoking_alcohol · gender</p>
+      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">饮食类型、压力水平、睡眠质量、运动水平、烟酒习惯、性别</p>
     </div>
   </div>
 
   <div class="card reveal delay-3" style="margin-top:16px">
-    <h3 style="color:var(--accent-red)">鐩爣鍙橀噺鍒嗗竷</h3>
+    <h3 style="color:var(--accent-red)">目标变量分布</h3>
     <div class="grid2">
       <div style="max-width:320px"><canvas id="targetDonut"></canvas></div>
       <div style="font-size:.84rem;color:var(--text-secondary);line-height:1.8">
-        <p>at-risk锛堥珮椋庨櫓锛夛細<strong style="color:var(--accent-red)">592,561 浜?路 85.87%</strong></p>
-        <p>unhealthy锛堜笉鍋ュ悍锛夛細<strong style="color:var(--accent-amber)">57,724 浜?路 8.36%</strong></p>
-        <p>fit锛堝仴搴凤級锛?strong style="color:var(--accent-green)">39,803 浜?路 5.77%</strong></p>
+        <p>at-risk（高风险）：<strong style="color:var(--accent-red)">592,561 人 · 85.87%</strong></p>
+        <p>unhealthy（不健康）：<strong style="color:var(--accent-amber)">57,724 人 · 8.36%</strong></p>
+        <p>fit（健康）：<strong style="color:var(--accent-green)">39,803 人 · 5.77%</strong></p>
         <p style="margin-top:8px;padding:8px 12px;background:rgba(231,76,60,.08);border-left:3px solid var(--accent-red);border-radius:0 4px 4px 0">
-          鈿?濡傛灉鍏ㄧ寽 at-risk锛屾櫘閫氬噯纭巼杈?85.87%锛屼絾绔炶禌浣跨敤鐨?<strong>Balanced Accuracy</strong> 浠呬负 0.333鈥斺€旇繖鎰忓懗鐫€妯″瀷蹇呴』鍏钩瀵瑰緟姣忎竴绫汇€?        </p>
+          ⚠ 如果全猜 at-risk，普通准确率达 85.87%，但竞赛使用的 <strong>Balanced Accuracy</strong> 仅为 0.333——这意味着模型必须公平对待每一类。
+        </p>
       </div>
     </div>
   </div>
 </div>
 </section>
 
-<!-- ===== 鏁版嵁鎺㈢储: 鍙戠幇浜嗕粈涔?===== -->
+<!-- ===== 数据探索: 发现了什么 ===== -->
 <section class="section" id="s2" style="background:var(--bg-deep)">
 <div class="container">
-  <span class="section-label reveal">02 路 鏁版嵁閲屽彂鐜颁簡浠€涔?/span>
-  <h2 class="reveal">缂哄け鍊艰寰?& 鐗瑰緛鍖哄垎搴?/h2>
+  <span class="section-label reveal">02 · 数据里发现了什么</span>
+  <h2 class="reveal">缺失值规律 & 特征区分度</h2>
 
   <div class="grid2 reveal delay-1" style="margin-top:24px">
     <div class="card">
-      <h3 style="color:var(--accent-blue)">缂哄け鍊煎垎甯冿紙train = test 绮剧‘涓€鑷达級</h3>
+      <h3 style="color:var(--accent-blue)">缺失值分布（train = test 精确一致）</h3>
       <div id="missingChart"></div>
-      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">缂哄け鐜囧湪璁粌闆嗗拰娴嬭瘯闆嗗畬鍏ㄤ竴鑷达紝璇存槑鏁版嵁涓?strong style="color:var(--accent-teal)">鍚堟垚鐢熸垚</strong></p>
+      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">缺失率在训练集和测试集完全一致，说明数据为<strong style="color:var(--accent-teal)">合成生成</strong></p>
     </div>
     <div class="card">
-      <h3 style="color:var(--accent-amber)">鍚勭壒寰佸湪涓夌被鍒笅鐨勫潎鍊煎樊寮?/h3>
+      <h3 style="color:var(--accent-amber)">各特征在三类别下的均值差异</h3>
       <canvas id="featureImportance"></canvas>
     </div>
   </div>
 
   <div class="grid3 reveal delay-2" style="margin-top:20px">
     <div class="card">
-      <h3 style="color:var(--accent-green)">猸?sleep_duration 鏈€寮洪娴嬪櫒</h3>
-      <p>fit 绫诲潎鍊?7.95锛寀nhealthy 浠?5.37鈥斺€斿樊鍊?2.58 涓爣鍑嗗樊锛屾槸鏈€寮哄崟鐗瑰緛淇″彿</p>
+      <h3 style="color:var(--accent-green)">⭐ sleep_duration 最强预测器</h3>
+      <p>fit 类均值 7.95，unhealthy 仅 5.37——差值 2.58 个标准差，是最强单特征信号</p>
     </div>
     <div class="card">
-      <h3 style="color:var(--accent-blue)">猸?step_count & exercise 绱ч殢鍏跺悗</h3>
-      <p>fit 绫绘棩鍧囨鏁?11,651锛岃繙楂樹簬 at-risk 鐨?8,407锛涜繍鍔ㄦ椂闀垮樊寮傚悓鏍锋樉钁?/p>
+      <h3 style="color:var(--accent-blue)">⭐ step_count & exercise 紧随其后</h3>
+      <p>fit 类日均步数 11,651，远高于 at-risk 的 8,407；运动时长差异同样显著</p>
     </div>
     <div class="card">
-      <h3 style="color:var(--accent-red)">鉂?heart_rate & water_intake 鏃犲尯鍒嗗害</h3>
-      <p>涓夌被闂村潎鍊煎嚑涔庣浉鍚岋紝杩欎袱涓壒寰佸鍒嗙被鍑犱箮娌℃湁璐＄尞锛屽彲瑙嗕负鍣０</p>
+      <h3 style="color:var(--accent-red)">❌ heart_rate & water_intake 无区分度</h3>
+      <p>三类间均值几乎相同，这两个特征对分类几乎没有贡献，可视为噪声</p>
     </div>
   </div>
 </div>
 </section>
 
-<!-- ===== 鐗瑰緛宸ョ▼: 鍋氫簡浠€涔?===== -->
+<!-- ===== 特征工程: 做了什么 ===== -->
 <section class="section" id="s3" style="background:var(--bg-card)">
 <div class="container">
-  <span class="section-label reveal">03 路 鎴戜滑鍋氫簡浠€涔堚€斺€旂壒寰佸伐绋?/span>
-  <h2 class="reveal">浠?13 缁村埌 27 缁?/h2>
+  <span class="section-label reveal">03 · 我们做了什么——特征工程</span>
+  <h2 class="reveal">从 13 维到 27 维</h2>
 
   <div class="feature-flow reveal delay-1">
-    <div class="flow-step"><div class="n">7</div>鍘熷鏁板€?/div><span class="flow-arrow">+</span>
-    <div class="flow-step"><div class="n">13</div>缂哄け鎸囩ず</div><span class="flow-arrow">+</span>
-    <div class="flow-step"><div class="n">1</div>缂哄け璁℃暟</div><span class="flow-arrow">+</span>
-    <div class="flow-step"><div class="n">6</div>绫诲埆缂栫爜</div><span class="flow-arrow">=</span>
-    <div class="flow-step" style="border-color:var(--accent-green)"><div class="n" style="font-size:2rem">27</div>鏈€缁堢壒寰?/div>
+    <div class="flow-step"><div class="n">7</div>原始数值</div><span class="flow-arrow">+</span>
+    <div class="flow-step"><div class="n">13</div>缺失指示</div><span class="flow-arrow">+</span>
+    <div class="flow-step"><div class="n">1</div>缺失计数</div><span class="flow-arrow">+</span>
+    <div class="flow-step"><div class="n">6</div>类别编码</div><span class="flow-arrow">=</span>
+    <div class="flow-step" style="border-color:var(--accent-green)"><div class="n" style="font-size:2rem">27</div>最终特征</div>
   </div>
 
   <div class="grid2 reveal delay-2" style="margin-top:16px">
     <div class="card">
-      <h3 style="color:var(--accent-green)">馃攽 鏍稿績鎿嶄綔锛歁issing Indicators</h3>
+      <h3 style="color:var(--accent-green)">🔑 核心操作：Missing Indicators</h3>
       <p style="font-size:.84rem;line-height:1.8">
-        涓?<strong>姣忎釜鍘熷鐗瑰緛</strong> 鍒涘缓涓€涓簩鍊兼爣璁板垪锛?br>
-        <code style="background:#1e2d3d;padding:2px 6px;border-radius:3px">sleep_duration_missing = 1</code>锛堝鏋滃師濮嬪€间负绌猴級<br>
-        杩欏憡璇夋ā鍨?杩欎釜鍊兼槸琚～鍏呯殑锛岃€岄潪鐪熷疄瑙傚療鍊?銆?br>
-        <span style="color:var(--text-muted)">* 绀惧尯娑堣瀺瀹為獙楠岃瘉锛氳繖鏄敹鐩婃渶澶х殑鍗曟鐗瑰緛宸ョ▼</span>
+        为 <strong>每个原始特征</strong> 创建一个二值标记列：<br>
+        <code style="background:#1e2d3d;padding:2px 6px;border-radius:3px">sleep_duration_missing = 1</code>（如果原始值为空）<br>
+        这告诉模型"这个值是被填充的，而非真实观察值"。<br>
+        <span style="color:var(--text-muted)">* 社区消融实验验证：这是收益最大的单步特征工程</span>
       </p>
     </div>
     <div class="card">
-      <h3 style="color:var(--accent-teal)">馃幆 涓轰粈涔堜笉鍋氭洿澶氱壒寰侊紵</h3>
+      <h3 style="color:var(--accent-teal)">🎯 为什么不做更多特征？</h3>
       <p style="font-size:.84rem;line-height:1.8">
-        鐗瑰緛浜ゅ弶銆佸垎绠便€佺洰鏍囩紪鐮佺瓑澶嶆潅鎿嶄綔缁忚繃楠岃瘉<strong>鍧囨棤绋冲畾鏀剁泭</strong>銆?br>
-        鍘熷洜锛氳繖鏄竴涓?strong>鍚堟垚鏁版嵁闆?/strong>鈥斺€旂敓鎴愬櫒鏈韩娌℃湁缂栫爜杩欎簺浜や簰缁撴瀯锛屽己琛屽紩鍏ュ彧浼氬鍔犺繃鎷熷悎銆?br>
-        <span style="color:var(--accent-green)">绠€鍗?= 绋冲畾 = 鍙鐜?/span>
+        特征交叉、分箱、目标编码等复杂操作经过验证<strong>均无稳定收益</strong>。<br>
+        原因：这是一个<strong>合成数据集</strong>——生成器本身没有编码这些交互结构，强行引入只会增加过拟合。<br>
+        <span style="color:var(--accent-green)">简单 = 稳定 = 可复现</span>
       </p>
     </div>
   </div>
 </div>
 </section>
 
-<!-- ===== 寤烘ā瀹為獙: 杩囩▼鏄粈涔?===== -->
+<!-- ===== 建模实验: 过程是什么 ===== -->
 <section class="section" id="s4" style="background:var(--bg-deep)">
 <div class="container">
-  <span class="section-label reveal">04 路 鎴戜滑鍋氫簡浠€涔堚€斺€斿缓妯″姣?/span>
-  <h2 class="reveal">5 涓ā鍨嬶紝閫愭楠岃瘉</h2>
+  <span class="section-label reveal">04 · 我们做了什么——建模对比</span>
+  <h2 class="reveal">5 个模型，逐步验证</h2>
 
-  <p class="reveal" style="color:var(--text-secondary);margin-top:8px;max-width:700px">鍏堢敤 20% 閲囨牱鏁版嵁蹇€熺瓫閫夋ā鍨嬬被鍨嬶紝纭畾鏈€浼樻柟鍚戝悗鍦?80% 鍏ㄩ噺鏁版嵁涓婇獙璇侊紝鏈€缁堣瀺鍚堢敓鎴愰娴?/p>
+  <p class="reveal" style="color:var(--text-secondary);margin-top:8px;max-width:700px">先用 20% 采样数据快速筛选模型类型，确定最优方向后在 80% 全量数据上验证，最终融合生成预测</p>
 
   <div class="grid2 reveal delay-1" style="margin-top:24px">
     <div>
-      <h3 style="font-size:.9rem;color:var(--text-muted);margin-bottom:12px">妯″瀷 Balanced Accuracy 瀵规瘮</h3>
+      <h3 style="font-size:.9rem;color:var(--text-muted);margin-bottom:12px">模型 Balanced Accuracy 对比</h3>
       <div class="model-compare" id="modelBars"></div>
     </div>
     <div>
@@ -276,85 +278,86 @@ h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;color:var(--text-primary)}
 
   <div class="grid3 reveal delay-2" style="margin-top:20px">
     <div class="card">
-      <h3 style="color:var(--accent-red)">閫昏緫鍥炲綊</h3>
-      <p>BA = 0.7700 路 绾挎€у熀绾?br>楠岃瘉浜嗘闂鐨勯潪绾挎€ф湰璐ㄢ€斺€旂嚎鎬фā鍨嬫棤娉曟崟鎹夊鏉傚喅绛栬竟鐣?/p>
+      <h3 style="color:var(--accent-red)">逻辑回归</h3>
+      <p>BA = 0.7700 · 线性基线<br>验证了此问题的非线性本质——线性模型无法捕捉复杂决策边界</p>
     </div>
     <div class="card">
-      <h3 style="color:var(--accent-green)">LightGBM 鏈€浣?/h3>
-      <p>BA = 0.9497 路 1000 杞缁?br>class_weight='balanced' 搴斿涓嶅钩琛★紱num_leaves=63 鎺у埗澶嶆潅搴?/p>
+      <h3 style="color:var(--accent-green)">LightGBM 最佳</h3>
+      <p>BA = 0.9497 · 1000 轮训练<br>class_weight='balanced' 应对不平衡；num_leaves=63 控制复杂度</p>
     </div>
     <div class="card">
-      <h3 style="color:var(--accent-amber)">CatBoost 娆′紭</h3>
-      <p>BA = 0.9494 路 999 杞缁?br>涓?LightGBM 鎬ц兘鎺ヨ繎锛岀瓑鏉冭瀺鍚堝悗鍙簰琛ョǔ鍋ユ€?/p>
+      <h3 style="color:var(--accent-amber)">CatBoost 次优</h3>
+      <p>BA = 0.9494 · 999 轮训练<br>与 LightGBM 性能接近，等权融合后可互补稳健性</p>
     </div>
   </div>
 </div>
 </section>
 
-<!-- ===== 缁撴灉鎬荤粨: 寰楀埌浜嗕粈涔?===== -->
+<!-- ===== 结果总结: 得到了什么 ===== -->
 <section class="section" id="s5" style="background:var(--bg-card)">
 <div class="container">
-  <span class="section-label reveal">05 路 寰楀埌浜嗕粈涔堢粨鏋?/span>
-  <h2 class="reveal">涓庣ぞ鍖烘柟妗堝姣?/h2>
+  <span class="section-label reveal">05 · 得到了什么结果</span>
+  <h2 class="reveal">与社区方案对比</h2>
 
   <div class="compare-grid reveal delay-1" style="margin-top:24px">
     <div class="compare-card">
-      <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:.1em">鍙傝€冩柟妗?A</div>
+      <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:.1em">参考方案 A</div>
       <div class="big">0.95010</div>
-      <div class="sub">Stellan-04 路 涓夌瀛?LightGBM</div>
+      <div class="sub">Stellan-04 · 三种子 LightGBM</div>
     </div>
     <div class="compare-card ours">
-      <div style="font-size:.72rem;color:var(--accent-green);letter-spacing:.1em">馃弳 鏈」鐩?/div>
+      <div style="font-size:.72rem;color:var(--accent-green);letter-spacing:.1em">🏆 本项目</div>
       <div class="big">0.94918</div>
-      <div class="sub">LGBM + CatBoost 绛夋潈铻嶅悎</div>
+      <div class="sub">LGBM + CatBoost 等权融合</div>
     </div>
     <div class="compare-card">
-      <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:.1em">鍙傝€冩柟妗?B</div>
+      <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:.1em">参考方案 B</div>
       <div class="big">0.95045</div>
-      <div class="sub">stevenleehans 路 HGBC + RealMLP</div>
+      <div class="sub">stevenleehans · HGBC + RealMLP</div>
     </div>
   </div>
 
   <div class="grid2 reveal delay-2" style="margin-top:24px">
     <div class="card">
-      <h3 style="color:var(--accent-green)">鏍稿績缁撹</h3>
+      <h3 style="color:var(--accent-green)">核心结论</h3>
       <p style="line-height:1.8">
-        鈶?鏈€缁?Public Score <strong style="color:var(--accent-green)">0.94918</strong>锛屼笌鏈€浼樻柟妗堝樊璺濅粎 0.0009<br>
-        鈶?楠岃瘉闆嗕笂 LightGBM 鍙栧緱 <strong style="color:var(--accent-green)">0.9497</strong> 鐨?Balanced Accuracy<br>
-        鈶?濡傚鍔犲绉嶅瓙闆嗘垚 + 浼樺寲铻嶅悎鏉冮噸锛岄璁″彲杈?<strong style="color:var(--accent-amber)">0.950+</strong>
+        ① 最终 Public Score <strong style="color:var(--accent-green)">0.94918</strong>，与最优方案差距仅 0.0009<br>
+        ② 验证集上 LightGBM 取得 <strong style="color:var(--accent-green)">0.9497</strong> 的 Balanced Accuracy<br>
+        ③ 如增加多种子集成 + 优化融合权重，预计可达 <strong style="color:var(--accent-amber)">0.950+</strong>
       </p>
     </div>
     <div class="card">
-      <h3 style="color:var(--accent-blue)">鍏抽敭鍐崇瓥</h3>
+      <h3 style="color:var(--accent-blue)">关键决策</h3>
       <p style="line-height:1.8">
-        鉁?閫夌敤 Balanced Accuracy 鑰岄潪鏅€氬噯纭巼璇勪及<br>
-        鉁?class_weight='balanced' 搴斿鏋佺绫诲埆涓嶅钩琛?br>
-        鉁?Missing Indicators 鈥斺€?琚獙璇佹渶鏈夋晥鐨勭壒寰佸伐绋?br>
-        鉁?鏀惧純澶嶆潅浜や簰鈥斺€旈伩鍏嶅悎鎴愭暟鎹繃鎷熷悎<br>
-        鉁?澶氭ā鍨嬫鐜囪瀺鍚堟彁楂樼ǔ瀹氭€?      </p>
+        ✓ 选用 Balanced Accuracy 而非普通准确率评估<br>
+        ✓ class_weight='balanced' 应对极端类别不平衡<br>
+        ✓ Missing Indicators —— 被验证最有效的特征工程<br>
+        ✓ 放弃复杂交互——避免合成数据过拟合<br>
+        ✓ 多模型概率融合提高稳定性
+      </p>
     </div>
   </div>
 </div>
 </section>
 
-<!-- ===== 杩囩▼鍥為【 ===== -->
+<!-- ===== 过程回顾 ===== -->
 <section class="section" id="s6" style="background:var(--bg-deep);min-height:auto;padding:80px 0">
 <div class="container">
-  <span class="section-label reveal">06 路 瀹屾暣杩囩▼鍥為【</span>
-  <h2 class="reveal">浜旈樁娈甸」鐩祦绋?/h2>
+  <span class="section-label reveal">06 · 完整过程回顾</span>
+  <h2 class="reveal">五阶段项目流程</h2>
   <div class="timeline reveal delay-1" style="margin-top:24px;max-width:700px">
-    <div class="tl-item"><div class="phase">闃舵 1</div><h4>鐜鎼缓 & 鏁版嵁鑾峰彇</h3><p>鍒涘缓椤圭洰缁撴瀯锛屼笅杞?91.71 MB 鏁版嵁锛屽厠闅嗙ぞ鍖哄弬鑰冧粨搴擄紝閰嶇疆 Python 鐜</p></div>
-    <div class="tl-item"><div class="phase">闃舵 2</div><h4>鎺㈢储鎬ф暟鎹垎鏋?/h3><p>鍙戠幇 85.87% 绫诲埆涓嶅钩琛°€佺己澶辩巼 train/test 涓€鑷淬€乻leep_duration 涓烘渶寮虹壒寰?/p></div>
-    <div class="tl-item"><div class="phase">闃舵 3</div><h4>鐗瑰緛宸ョ▼</h3><p>璁捐 Missing Indicators銆丮issing Count銆佷腑浣嶆暟濉厖涓庢爣绛剧紪鐮侊紝13 缁?鈫?27 缁?/p></div>
-    <div class="tl-item"><div class="phase">闃舵 4</div><h4>寤烘ā涓庡姣?/h3><p>璁粌 5 涓?Baseline锛孡ightGBM 鏈€浣?(BA 0.9497)锛屼笌 CatBoost 绛夋潈铻嶅悎</p></div>
-    <div class="tl-item"><div class="phase">闃舵 5</div><h4>鎻愪氦涓庢枃妗?/h3><p>Kaggle 鎻愪氦鑾?Public Score 0.94918锛岀紪鍐欏畬鏁存妧鏈枃妗ｄ笌浜や簰寮忓垎鏋愭姤鍛?/p></div>
+    <div class="tl-item"><div class="phase">阶段 1</div><h4>环境搭建 & 数据获取</h3><p>创建项目结构，下载 91.71 MB 数据，克隆社区参考仓库，配置 Python 环境</p></div>
+    <div class="tl-item"><div class="phase">阶段 2</div><h4>探索性数据分析</h3><p>发现 85.87% 类别不平衡、缺失率 train/test 一致、sleep_duration 为最强特征</p></div>
+    <div class="tl-item"><div class="phase">阶段 3</div><h4>特征工程</h3><p>设计 Missing Indicators、Missing Count、中位数填充与标签编码，13 维 → 27 维</p></div>
+    <div class="tl-item"><div class="phase">阶段 4</div><h4>建模与对比</h3><p>训练 5 个 Baseline，LightGBM 最佳 (BA 0.9497)，与 CatBoost 等权融合</p></div>
+    <div class="tl-item"><div class="phase">阶段 5</div><h4>提交与文档</h3><p>Kaggle 提交获 Public Score 0.94918，编写完整技术文档与交互式分析报告</p></div>
   </div>
 </div>
 </section>
 
 <footer class="footer-section">
   <div class="container">
-    <p>Predicting Student Health Risk 路 Kaggle Playground S6E7 路 <a href="https://github.com/ligap123/playground-series-s6e7" target="_blank">GitHub</a> 路 <a href="https://www.kaggle.com/competitions/playground-series-s6e7" target="_blank">Kaggle</a></p>
+    <p>Predicting Student Health Risk · Kaggle Playground S6E7 · <a href="https://github.com/ligap123/playground-series-s6e7" target="_blank">GitHub</a> · <a href="https://www.kaggle.com/competitions/playground-series-s6e7" target="_blank">Kaggle</a></p>
   </div>
 </footer>
 
