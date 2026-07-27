@@ -105,18 +105,16 @@ h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;color:var(--text-primary)}
 .footer-section p{color:var(--text-muted);font-size:.8rem}
 .footer-section a{color:var(--accent-green);text-decoration:none}
 
-.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease-out,transform .7s ease-out}
-.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal{transform:translateY(30px);transition:transform .7s ease-out}
+.reveal.visible{transform:translateY(0)}
 .delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}
-.reveal-fallback .reveal{opacity:1;transform:none;transition:none}
 
 @media(max-width:768px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.compare-grid{grid-template-columns:1fr}.stat-row{gap:12px}}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.bar-row .fill,.model-item .mfill{transition:none}}
+@media(prefers-reduced-motion:reduce){.reveal{transform:none;transition:none}.bar-row .fill,.model-item .mfill{transition:none}}
 </style>
 </head>
-<body class="reveal-fallback">
+<body>
 
-<script>document.body.classList.remove('reveal-fallback');</script>
 <div class="scroll-bar" id="scrollBar"></div>
 <nav class="nav-dots" aria-label="页面导航">
   <button class="nav-dot active" data-section="0" title="首页"></button>
