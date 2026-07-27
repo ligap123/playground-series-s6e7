@@ -1,0 +1,403 @@
+<!--
+  Predicting Student Health Risk 鈥?浜や簰寮忓彲瑙嗗寲鍒嗘瀽鎶ュ憡
+  Kaggle Playground S6E7 | Public Score: 0.94918
+  鍙欎簨閫昏緫: 鏄粈涔?鈫?鏈変粈涔?鈫?鍙戠幇浜嗕粈涔?鈫?鍋氫簡浠€涔?鈫?寰楀埌浜嗕粈涔?-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Predicting Student Health Risk 鈥?椤圭洰鍒嗘瀽鎶ュ憡</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js">
+</script>
+<style>
+:root {
+  --bg-deep:#080c12; --bg-card:#111820; --bg-surface:#18202a;
+  --text-primary:#e8ecf2; --text-secondary:#8899aa; --text-muted:#5a6a7a;
+  --accent-red:#e74c3c; --accent-amber:#e67e22; --accent-green:#2ecc71;
+  --accent-blue:#5b8def; --accent-teal:#1abc9c;
+  --border:#1e2d3d; --border-light:#2a3a4d;
+  --font-display:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  --font-mono:'Cascadia Code','Fira Code','JetBrains Mono',monospace;
+  --shadow:0 4px 24px rgba(0,0,0,.4);
+  --radius:12px; --radius-sm:8px;
+  --section-gap:clamp(60px,10vh,100px);
+  --z-nav:100; --z-overlay:200;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:var(--font-display);background:var(--bg-deep);color:var(--text-primary);
+  line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+h1{font-size:clamp(2rem,4vw,3rem);font-weight:700;line-height:1.2;letter-spacing:-0.02em}
+h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;color:var(--text-primary)}
+.mono{font-family:var(--font-mono);font-size:.88rem;color:var(--accent-teal)}
+.tag{display:inline-block;padding:3px 10px;border-radius:4px;font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.scroll-bar{position:fixed;top:0;left:0;height:3px;background:var(--accent-green);z-index:var(--z-nav);transition:width .1s linear}
+.nav-dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:var(--z-nav);display:flex;flex-direction:column;gap:10px}
+.nav-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--text-muted);cursor:pointer;transition:all .3s;background:transparent}
+.nav-dot.active,.nav-dot:hover{background:var(--accent-green);border-color:var(--accent-green);box-shadow:0 0 8px rgba(46,204,113,.4)}
+.section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:var(--section-gap) 0}
+.container{width:min(1100px,90vw);margin:0 auto}
+.section-label{font-family:var(--font-mono);font-size:.78rem;color:var(--accent-amber);letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+.hero-section{background:var(--bg-deep);position:relative;overflow:hidden}
+.hero-section::before{content:'';position:absolute;top:-150px;right:-150px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(46,204,113,.06) 0%,transparent 70%);pointer-events:none}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:750px;margin:0 auto}
+.hero h1{margin-bottom:16px}
+.hero h1 .hl{color:var(--accent-green)}
+.hero-subtitle{font-size:1.1rem;color:var(--text-secondary);margin-bottom:32px;line-height:1.6}
+.hero-meta{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;font-family:var(--font-mono);font-size:.82rem;color:var(--text-muted)}
+.hero-meta span strong{color:var(--accent-green)}
+
+.card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px}
+.card h4{font-size:1rem;margin-bottom:10px}
+.card p,.card li{font-size:.84rem;color:var(--text-secondary);line-height:1.7}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+
+.stat-row{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:24px}
+.stat-box{flex:1;min-width:130px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;text-align:center}
+.stat-box .num{font-size:1.8rem;font-weight:800}
+.stat-box .lbl{font-size:.72rem;color:var(--text-muted);margin-top:2px}
+
+.feature-flow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:24px 0}
+.flow-step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;text-align:center;min-width:80px;font-size:.78rem}
+.flow-step .n{font-size:1.5rem;font-weight:800;color:var(--accent-green)}
+.flow-arrow{color:var(--accent-teal);font-size:1.2rem}
+
+.bar-row{display:flex;align-items:center;gap:10px;font-size:.82rem;margin-bottom:6px}
+.bar-row .name{width:150px;text-align:right;color:var(--text-secondary);flex-shrink:0}
+.bar-row .track{flex:1;height:16px;background:var(--bg-card);border-radius:8px;overflow:hidden}
+.bar-row .fill{height:100%;border-radius:8px;transition:width 1.2s ease-out}
+.bar-row .val{width:48px;font-family:var(--font-mono);font-size:.78rem;color:var(--text-muted);text-align:right}
+
+.model-compare{display:flex;flex-direction:column;gap:8px}
+.model-item{display:flex;align-items:center;gap:10px;padding:6px 0}
+.model-item .mname{width:130px;font-size:.84rem;color:var(--text-secondary)}
+.model-item .mbar{flex:1;height:20px;background:var(--bg-card);border-radius:10px;overflow:hidden;position:relative}
+.model-item .mbar .mfill{height:100%;border-radius:10px;transition:width 1.5s ease-out}
+.model-item .mscore{width:60px;font-family:var(--font-mono);font-size:.82rem;text-align:right}
+
+.compare-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.compare-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 20px;text-align:center}
+.compare-card.ours{border-color:var(--accent-green);box-shadow:0 0 20px rgba(46,204,113,.1)}
+.compare-card .big{font-size:2.4rem;font-weight:800}
+.compare-card.ours .big{color:var(--accent-green)}
+.compare-card .sub{font-size:.78rem;color:var(--text-muted);margin-top:4px}
+
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent-green),var(--accent-amber),var(--accent-red))}
+.tl-item{position:relative;margin-bottom:28px;padding-left:28px}
+.tl-item::before{content:'';position:absolute;left:-10px;top:6px;width:14px;height:14px;border-radius:50%;border:2px solid var(--accent-green);background:var(--bg-deep)}
+.tl-item:nth-child(2)::before{border-color:var(--accent-blue)}
+.tl-item:nth-child(3)::before{border-color:var(--accent-amber)}
+.tl-item:nth-child(4)::before{border-color:var(--accent-teal)}
+.tl-item:nth-child(5)::before{border-color:var(--accent-red)}
+.tl-item .phase{font-family:var(--font-mono);font-size:.72rem;color:var(--accent-teal);letter-spacing:.08em}
+.tl-item h4{font-size:.95rem;margin:2px 0}
+.tl-item p{font-size:.8rem;color:var(--text-secondary)}
+
+.footer-section{background:var(--bg-card);border-top:1px solid var(--border);padding:32px 0;text-align:center}
+.footer-section p{color:var(--text-muted);font-size:.8rem}
+.footer-section a{color:var(--accent-green);text-decoration:none}
+
+.reveal{transform:translateY(30px);transition:transform .7s ease-out}
+.reveal.visible{transform:translateY(0)}
+.delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}
+
+@media(max-width:768px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.compare-grid{grid-template-columns:1fr}.stat-row{gap:12px}}
+@media(prefers-reduced-motion:reduce){.reveal{transform:none;transition:none}.bar-row .fill,.model-item .mfill{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="scroll-bar" id="scrollBar"></div>
+<nav class="nav-dots" aria-label="椤甸潰瀵艰埅">
+  <button class="nav-dot active" data-section="0" title="棣栭〉"></button>
+  <button class="nav-dot" data-section="1" title="鏁版嵁"></button>
+  <button class="nav-dot" data-section="2" title="鎺㈢储"></button>
+  <button class="nav-dot" data-section="3" title="鐗瑰緛"></button>
+  <button class="nav-dot" data-section="4" title="妯″瀷"></button>
+  <button class="nav-dot" data-section="5" title="缁撴灉"></button>
+  <button class="nav-dot" data-section="6" title="杩囩▼"></button>
+</nav>
+
+<!-- ===== HERO: 杩欐槸浠€涔?===== -->
+<section class="section hero-section" id="s0">
+<div class="container hero-content reveal">
+  <h1>棰勬祴澶у鐢?span class="hl">鍋ュ悍椋庨櫓</span></h1>
+  <p class="hero-subtitle">
+    鍩轰簬瀛︾敓鐨勭潯鐪犮€佽繍鍔ㄣ€侀ギ椋熴€佽韩浣撴寚鏍囩瓑澶氱淮鏁版嵁锛屽皢鍋ュ悍鐘跺喌鍒嗕负涓夌被锛?br>
+    <span style="color:var(--accent-red)">at-risk 楂橀闄?/span> 路 
+    <span style="color:var(--accent-amber)">unhealthy 涓嶅仴搴?/span> 路 
+    <span style="color:var(--accent-green)">fit 鍋ュ悍</span>
+  </p>
+  <div class="hero-meta">
+    <span>璁粌鏍锋湰 <strong>690,088</strong></span>
+    <span>鍘熷鐗瑰緛 <strong>13</strong> 涓?/span>
+    <span>娴嬭瘯鏍锋湰 <strong>295,753</strong></span>
+  </div>
+</div>
+</section>
+
+<!-- ===== 鏁版嵁姒傝: 鏈変粈涔?===== -->
+<section class="section" id="s1" style="background:var(--bg-card)">
+<div class="container">
+  <span class="section-label reveal">01 路 鎴戜滑鏈変粈涔堟暟鎹?/span>
+  <h2 class="reveal">13 涓壒寰侊紝69 涓囨潯璁板綍锛? 涓被鍒?/h2>
+
+  <div class="stat-row reveal delay-1" style="margin-top:24px">
+    <div class="stat-box"><div class="num" style="color:var(--accent-green)">690,088</div><div class="lbl">璁粌鏍锋湰鏁?/div></div>
+    <div class="stat-box"><div class="num" style="color:var(--accent-blue)">13</div><div class="lbl">鍘熷鐗瑰緛</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--accent-amber)">3</div><div class="lbl">鐩爣绫诲埆</div></div>
+    <div class="stat-box"><div class="num" style="color:var(--accent-red)">91.71 MB</div><div class="lbl">鏁版嵁鎬婚噺</div></div>
+  </div>
+
+  <div class="grid2 reveal delay-2" style="margin-top:16px">
+    <div class="card">
+      <h3 style="color:var(--accent-green)">鏁板€肩壒寰?(7 涓?</h3>
+      <p>sleep_duration 路 heart_rate 路 bmi 路 calorie_expenditure 路 step_count 路 exercise_duration 路 water_intake</p>
+      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">鐫＄湢鏃堕暱銆佸績鐜囥€佽韩浣撹川閲忔寚鏁般€佸崱璺噷娑堣€椼€佹鏁般€佽繍鍔ㄦ椂闀裤€侀ギ姘撮噺</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent-amber)">绫诲埆鐗瑰緛 (6 涓?</h3>
+      <p>diet_type 路 stress_level 路 sleep_quality 路 physical_activity_level 路 smoking_alcohol 路 gender</p>
+      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">楗绫诲瀷銆佸帇鍔涙按骞炽€佺潯鐪犺川閲忋€佽繍鍔ㄦ按骞炽€佺儫閰掍範鎯€佹€у埆</p>
+    </div>
+  </div>
+
+  <div class="card reveal delay-3" style="margin-top:16px">
+    <h3 style="color:var(--accent-red)">鐩爣鍙橀噺鍒嗗竷</h3>
+    <div class="grid2">
+      <div style="max-width:320px"><canvas id="targetDonut"></canvas></div>
+      <div style="font-size:.84rem;color:var(--text-secondary);line-height:1.8">
+        <p>at-risk锛堥珮椋庨櫓锛夛細<strong style="color:var(--accent-red)">592,561 浜?路 85.87%</strong></p>
+        <p>unhealthy锛堜笉鍋ュ悍锛夛細<strong style="color:var(--accent-amber)">57,724 浜?路 8.36%</strong></p>
+        <p>fit锛堝仴搴凤級锛?strong style="color:var(--accent-green)">39,803 浜?路 5.77%</strong></p>
+        <p style="margin-top:8px;padding:8px 12px;background:rgba(231,76,60,.08);border-left:3px solid var(--accent-red);border-radius:0 4px 4px 0">
+          鈿?濡傛灉鍏ㄧ寽 at-risk锛屾櫘閫氬噯纭巼杈?85.87%锛屼絾绔炶禌浣跨敤鐨?<strong>Balanced Accuracy</strong> 浠呬负 0.333鈥斺€旇繖鎰忓懗鐫€妯″瀷蹇呴』鍏钩瀵瑰緟姣忎竴绫汇€?        </p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== 鏁版嵁鎺㈢储: 鍙戠幇浜嗕粈涔?===== -->
+<section class="section" id="s2" style="background:var(--bg-deep)">
+<div class="container">
+  <span class="section-label reveal">02 路 鏁版嵁閲屽彂鐜颁簡浠€涔?/span>
+  <h2 class="reveal">缂哄け鍊艰寰?& 鐗瑰緛鍖哄垎搴?/h2>
+
+  <div class="grid2 reveal delay-1" style="margin-top:24px">
+    <div class="card">
+      <h3 style="color:var(--accent-blue)">缂哄け鍊煎垎甯冿紙train = test 绮剧‘涓€鑷达級</h3>
+      <div id="missingChart"></div>
+      <p style="margin-top:8px;font-size:.78rem;color:var(--text-muted)">缂哄け鐜囧湪璁粌闆嗗拰娴嬭瘯闆嗗畬鍏ㄤ竴鑷达紝璇存槑鏁版嵁涓?strong style="color:var(--accent-teal)">鍚堟垚鐢熸垚</strong></p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent-amber)">鍚勭壒寰佸湪涓夌被鍒笅鐨勫潎鍊煎樊寮?/h3>
+      <canvas id="featureImportance"></canvas>
+    </div>
+  </div>
+
+  <div class="grid3 reveal delay-2" style="margin-top:20px">
+    <div class="card">
+      <h3 style="color:var(--accent-green)">猸?sleep_duration 鏈€寮洪娴嬪櫒</h3>
+      <p>fit 绫诲潎鍊?7.95锛寀nhealthy 浠?5.37鈥斺€斿樊鍊?2.58 涓爣鍑嗗樊锛屾槸鏈€寮哄崟鐗瑰緛淇″彿</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent-blue)">猸?step_count & exercise 绱ч殢鍏跺悗</h3>
+      <p>fit 绫绘棩鍧囨鏁?11,651锛岃繙楂樹簬 at-risk 鐨?8,407锛涜繍鍔ㄦ椂闀垮樊寮傚悓鏍锋樉钁?/p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent-red)">鉂?heart_rate & water_intake 鏃犲尯鍒嗗害</h3>
+      <p>涓夌被闂村潎鍊煎嚑涔庣浉鍚岋紝杩欎袱涓壒寰佸鍒嗙被鍑犱箮娌℃湁璐＄尞锛屽彲瑙嗕负鍣０</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== 鐗瑰緛宸ョ▼: 鍋氫簡浠€涔?===== -->
+<section class="section" id="s3" style="background:var(--bg-card)">
+<div class="container">
+  <span class="section-label reveal">03 路 鎴戜滑鍋氫簡浠€涔堚€斺€旂壒寰佸伐绋?/span>
+  <h2 class="reveal">浠?13 缁村埌 27 缁?/h2>
+
+  <div class="feature-flow reveal delay-1">
+    <div class="flow-step"><div class="n">7</div>鍘熷鏁板€?/div><span class="flow-arrow">+</span>
+    <div class="flow-step"><div class="n">13</div>缂哄け鎸囩ず</div><span class="flow-arrow">+</span>
+    <div class="flow-step"><div class="n">1</div>缂哄け璁℃暟</div><span class="flow-arrow">+</span>
+    <div class="flow-step"><div class="n">6</div>绫诲埆缂栫爜</div><span class="flow-arrow">=</span>
+    <div class="flow-step" style="border-color:var(--accent-green)"><div class="n" style="font-size:2rem">27</div>鏈€缁堢壒寰?/div>
+  </div>
+
+  <div class="grid2 reveal delay-2" style="margin-top:16px">
+    <div class="card">
+      <h3 style="color:var(--accent-green)">馃攽 鏍稿績鎿嶄綔锛歁issing Indicators</h3>
+      <p style="font-size:.84rem;line-height:1.8">
+        涓?<strong>姣忎釜鍘熷鐗瑰緛</strong> 鍒涘缓涓€涓簩鍊兼爣璁板垪锛?br>
+        <code style="background:#1e2d3d;padding:2px 6px;border-radius:3px">sleep_duration_missing = 1</code>锛堝鏋滃師濮嬪€间负绌猴級<br>
+        杩欏憡璇夋ā鍨?杩欎釜鍊兼槸琚～鍏呯殑锛岃€岄潪鐪熷疄瑙傚療鍊?銆?br>
+        <span style="color:var(--text-muted)">* 绀惧尯娑堣瀺瀹為獙楠岃瘉锛氳繖鏄敹鐩婃渶澶х殑鍗曟鐗瑰緛宸ョ▼</span>
+      </p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent-teal)">馃幆 涓轰粈涔堜笉鍋氭洿澶氱壒寰侊紵</h3>
+      <p style="font-size:.84rem;line-height:1.8">
+        鐗瑰緛浜ゅ弶銆佸垎绠便€佺洰鏍囩紪鐮佺瓑澶嶆潅鎿嶄綔缁忚繃楠岃瘉<strong>鍧囨棤绋冲畾鏀剁泭</strong>銆?br>
+        鍘熷洜锛氳繖鏄竴涓?strong>鍚堟垚鏁版嵁闆?/strong>鈥斺€旂敓鎴愬櫒鏈韩娌℃湁缂栫爜杩欎簺浜や簰缁撴瀯锛屽己琛屽紩鍏ュ彧浼氬鍔犺繃鎷熷悎銆?br>
+        <span style="color:var(--accent-green)">绠€鍗?= 绋冲畾 = 鍙鐜?/span>
+      </p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== 寤烘ā瀹為獙: 杩囩▼鏄粈涔?===== -->
+<section class="section" id="s4" style="background:var(--bg-deep)">
+<div class="container">
+  <span class="section-label reveal">04 路 鎴戜滑鍋氫簡浠€涔堚€斺€斿缓妯″姣?/span>
+  <h2 class="reveal">5 涓ā鍨嬶紝閫愭楠岃瘉</h2>
+
+  <p class="reveal" style="color:var(--text-secondary);margin-top:8px;max-width:700px">鍏堢敤 20% 閲囨牱鏁版嵁蹇€熺瓫閫夋ā鍨嬬被鍨嬶紝纭畾鏈€浼樻柟鍚戝悗鍦?80% 鍏ㄩ噺鏁版嵁涓婇獙璇侊紝鏈€缁堣瀺鍚堢敓鎴愰娴?/p>
+
+  <div class="grid2 reveal delay-1" style="margin-top:24px">
+    <div>
+      <h3 style="font-size:.9rem;color:var(--text-muted);margin-bottom:12px">妯″瀷 Balanced Accuracy 瀵规瘮</h3>
+      <div class="model-compare" id="modelBars"></div>
+    </div>
+    <div>
+      <canvas id="modelChart"></canvas>
+    </div>
+  </div>
+
+  <div class="grid3 reveal delay-2" style="margin-top:20px">
+    <div class="card">
+      <h3 style="color:var(--accent-red)">閫昏緫鍥炲綊</h3>
+      <p>BA = 0.7700 路 绾挎€у熀绾?br>楠岃瘉浜嗘闂鐨勯潪绾挎€ф湰璐ㄢ€斺€旂嚎鎬фā鍨嬫棤娉曟崟鎹夊鏉傚喅绛栬竟鐣?/p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent-green)">LightGBM 鏈€浣?/h3>
+      <p>BA = 0.9497 路 1000 杞缁?br>class_weight='balanced' 搴斿涓嶅钩琛★紱num_leaves=63 鎺у埗澶嶆潅搴?/p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent-amber)">CatBoost 娆′紭</h3>
+      <p>BA = 0.9494 路 999 杞缁?br>涓?LightGBM 鎬ц兘鎺ヨ繎锛岀瓑鏉冭瀺鍚堝悗鍙簰琛ョǔ鍋ユ€?/p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== 缁撴灉鎬荤粨: 寰楀埌浜嗕粈涔?===== -->
+<section class="section" id="s5" style="background:var(--bg-card)">
+<div class="container">
+  <span class="section-label reveal">05 路 寰楀埌浜嗕粈涔堢粨鏋?/span>
+  <h2 class="reveal">涓庣ぞ鍖烘柟妗堝姣?/h2>
+
+  <div class="compare-grid reveal delay-1" style="margin-top:24px">
+    <div class="compare-card">
+      <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:.1em">鍙傝€冩柟妗?A</div>
+      <div class="big">0.95010</div>
+      <div class="sub">Stellan-04 路 涓夌瀛?LightGBM</div>
+    </div>
+    <div class="compare-card ours">
+      <div style="font-size:.72rem;color:var(--accent-green);letter-spacing:.1em">馃弳 鏈」鐩?/div>
+      <div class="big">0.94918</div>
+      <div class="sub">LGBM + CatBoost 绛夋潈铻嶅悎</div>
+    </div>
+    <div class="compare-card">
+      <div style="font-size:.72rem;color:var(--text-muted);letter-spacing:.1em">鍙傝€冩柟妗?B</div>
+      <div class="big">0.95045</div>
+      <div class="sub">stevenleehans 路 HGBC + RealMLP</div>
+    </div>
+  </div>
+
+  <div class="grid2 reveal delay-2" style="margin-top:24px">
+    <div class="card">
+      <h3 style="color:var(--accent-green)">鏍稿績缁撹</h3>
+      <p style="line-height:1.8">
+        鈶?鏈€缁?Public Score <strong style="color:var(--accent-green)">0.94918</strong>锛屼笌鏈€浼樻柟妗堝樊璺濅粎 0.0009<br>
+        鈶?楠岃瘉闆嗕笂 LightGBM 鍙栧緱 <strong style="color:var(--accent-green)">0.9497</strong> 鐨?Balanced Accuracy<br>
+        鈶?濡傚鍔犲绉嶅瓙闆嗘垚 + 浼樺寲铻嶅悎鏉冮噸锛岄璁″彲杈?<strong style="color:var(--accent-amber)">0.950+</strong>
+      </p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--accent-blue)">鍏抽敭鍐崇瓥</h3>
+      <p style="line-height:1.8">
+        鉁?閫夌敤 Balanced Accuracy 鑰岄潪鏅€氬噯纭巼璇勪及<br>
+        鉁?class_weight='balanced' 搴斿鏋佺绫诲埆涓嶅钩琛?br>
+        鉁?Missing Indicators 鈥斺€?琚獙璇佹渶鏈夋晥鐨勭壒寰佸伐绋?br>
+        鉁?鏀惧純澶嶆潅浜や簰鈥斺€旈伩鍏嶅悎鎴愭暟鎹繃鎷熷悎<br>
+        鉁?澶氭ā鍨嬫鐜囪瀺鍚堟彁楂樼ǔ瀹氭€?      </p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== 杩囩▼鍥為【 ===== -->
+<section class="section" id="s6" style="background:var(--bg-deep);min-height:auto;padding:80px 0">
+<div class="container">
+  <span class="section-label reveal">06 路 瀹屾暣杩囩▼鍥為【</span>
+  <h2 class="reveal">浜旈樁娈甸」鐩祦绋?/h2>
+  <div class="timeline reveal delay-1" style="margin-top:24px;max-width:700px">
+    <div class="tl-item"><div class="phase">闃舵 1</div><h4>鐜鎼缓 & 鏁版嵁鑾峰彇</h3><p>鍒涘缓椤圭洰缁撴瀯锛屼笅杞?91.71 MB 鏁版嵁锛屽厠闅嗙ぞ鍖哄弬鑰冧粨搴擄紝閰嶇疆 Python 鐜</p></div>
+    <div class="tl-item"><div class="phase">闃舵 2</div><h4>鎺㈢储鎬ф暟鎹垎鏋?/h3><p>鍙戠幇 85.87% 绫诲埆涓嶅钩琛°€佺己澶辩巼 train/test 涓€鑷淬€乻leep_duration 涓烘渶寮虹壒寰?/p></div>
+    <div class="tl-item"><div class="phase">闃舵 3</div><h4>鐗瑰緛宸ョ▼</h3><p>璁捐 Missing Indicators銆丮issing Count銆佷腑浣嶆暟濉厖涓庢爣绛剧紪鐮侊紝13 缁?鈫?27 缁?/p></div>
+    <div class="tl-item"><div class="phase">闃舵 4</div><h4>寤烘ā涓庡姣?/h3><p>璁粌 5 涓?Baseline锛孡ightGBM 鏈€浣?(BA 0.9497)锛屼笌 CatBoost 绛夋潈铻嶅悎</p></div>
+    <div class="tl-item"><div class="phase">闃舵 5</div><h4>鎻愪氦涓庢枃妗?/h3><p>Kaggle 鎻愪氦鑾?Public Score 0.94918锛岀紪鍐欏畬鏁存妧鏈枃妗ｄ笌浜や簰寮忓垎鏋愭姤鍛?/p></div>
+  </div>
+</div>
+</section>
+
+<footer class="footer-section">
+  <div class="container">
+    <p>Predicting Student Health Risk 路 Kaggle Playground S6E7 路 <a href="https://github.com/ligap123/playground-series-s6e7" target="_blank">GitHub</a> 路 <a href="https://www.kaggle.com/competitions/playground-series-s6e7" target="_blank">Kaggle</a></p>
+  </div>
+</footer>
+
+<script>
+// ===== Scroll & Nav =====
+const sections=document.querySelectorAll('.section');
+const navDots=document.querySelectorAll('.nav-dot');
+const scrollBar=document.getElementById('scrollBar');
+function updateNav(){
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  scrollBar.style.width=(window.scrollY/h*100)+'%';
+  let c=0;sections.forEach((s,i)=>{if(window.scrollY>=s.offsetTop-window.innerHeight/3)c=i});
+  navDots.forEach(d=>d.classList.remove('active'));
+  if(navDots[c])navDots[c].classList.add('active');
+}
+navDots.forEach(d=>d.addEventListener('click',()=>{sections[parseInt(d.dataset.section)].scrollIntoView({behavior:'smooth'})}));
+window.addEventListener('scroll',updateNav,{passive:true});
+
+// ===== Reveal =====
+const revealObserver=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.15});document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight)el.classList.add('visible')})},200);
+
+// ===== Charts =====
+Chart.defaults.color='#8899aa';Chart.defaults.borderColor='#1e2d3d';Chart.defaults.font.family="'Segoe UI','PingFang SC',sans-serif";
+
+new Chart(document.getElementById('targetDonut'),{type:'doughnut',data:{labels:['at-risk (85.87%)','unhealthy (8.36%)','fit (5.77%)'],datasets:[{data:[592561,57724,39803],backgroundColor:['#e74c3c','#e67e22','#2ecc71'],borderColor:'#111820',borderWidth:3}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyleWidth:8}}},cutout:'55%'}});
+
+new Chart(document.getElementById('featureImportance'),{type:'bar',data:{labels:['sleep\nduration','step\ncount','exercise\nduration','bmi','calorie\nexpenditure','heart\nrate','water\nintake'],datasets:[{label:'fit',data:[7.95,11651,50.0,21.8,2364,74.8,2.18],backgroundColor:'#2ecc71',borderRadius:4},{label:'unhealthy',data:[5.37,8670,39.0,24.1,2245,75.3,2.19],backgroundColor:'#e74c3c',borderRadius:4}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{position:'bottom'}},scales:{x:{grid:{color:'#1e2d3d'}}}}});
+
+const md=[{name:'Logistic Regression',val:0.7700,c:'low'},{name:'XGBoost',val:0.8797,c:'mid'},{name:'Random Forest',val:0.9481,c:'good'},{name:'CatBoost',val:0.9494,c:'good'},{name:'LightGBM',val:0.9497,c:'best'}];
+const bc=document.getElementById('modelBars');
+md.forEach(m=>{const r=document.createElement('div');r.className='model-item';r.innerHTML=`<span class="mname">${m.name}</span><div class="mbar"><div class="mfill ${m.c}" style="width:0%"></div></div><span class="mscore">${m.val.toFixed(4)}</span>`;bc.appendChild(r)});
+
+new Chart(document.getElementById('modelChart'),{type:'bar',data:{labels:md.map(m=>m.name),datasets:[{data:md.map(m=>m.val),backgroundColor:md.map(m=>m.c==='best'?'#2ecc71':m.c==='good'?'#1abc9c':m.c==='mid'?'#e67e22':'#e74c3c'),borderRadius:6}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0.7,max:1.0,grid:{color:'#1e2d3d'},ticks:{callback:v=>(v*100).toFixed(0)+'%'}},x:{grid:{display:false}}}});
+
+const msd=[{feat:'stress_level',pct:12.0},{feat:'sleep_duration',pct:11.01},{feat:'sleep_quality',pct:8.45},{feat:'calorie_expenditure',pct:7.66},{feat:'water_intake',pct:6.3},{feat:'phys_activity_level',pct:5.31},{feat:'smoking_alcohol',pct:4.14},{feat:'gender',pct:3.1},{feat:'bmi',pct:2.01},{feat:'step_count',pct:2.02},{feat:'heart_rate',pct:1.14},{feat:'diet_type',pct:1.0},{feat:'exercise_duration',pct:1.0}];
+const mc=document.getElementById('missingChart');
+msd.forEach(m=>{const r=document.createElement('div');r.className='bar-row';r.innerHTML=`<span class="name">${m.feat}</span><div class="track"><div class="fill" style="width:0%;background:${m.pct>10?'#e74c3c':m.pct>5?'#e67e22':'#5b8def'}"></div></div><span class="val">${m.pct.toFixed(1)}%</span>`;mc.appendChild(r)});
+
+// ===== Animate bars =====
+const bo=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('.model-item .mfill').forEach((b,i)=>{setTimeout(()=>{b.style.width=(md[i].val*100)+'%'},i*100)});document.querySelectorAll('.bar-row .fill').forEach((b,i)=>{setTimeout(()=>{b.style.width=(msd[i].pct/15*100)+'%'},i*80)});bo.unobserve(e.target)}})},{threshold:0.2});
+const m4=document.getElementById('s4');if(m4)bo.observe(m4);
+const m2=document.getElementById('s2');if(m2)bo.observe(m2);
+updateNav();
+</script>
+</body>
+</html>
