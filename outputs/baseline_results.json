@@ -1,0 +1,17 @@
+{
+  "LogisticRegression": {
+    "mean": 0.7699793747512186
+  },
+  "RandomForest": {
+    "mean": 0.9480706238778742
+  },
+  "LightGBM": {
+    "mean": 0.9444481964094443
+  },
+  "XGBoost": {
+    "mean": 0.8797199985087604
+  },
+  "CatBoost": {
+    "mean": 0.9495882269584744
+  }
+}

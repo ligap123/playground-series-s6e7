@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data (不提交竞赛数据)
+data/*.csv
+data/*.zip
+
+# Outputs
+outputs/models/
+outputs/predictions/*.csv
+outputs/*.parquet
+outputs/*.npy
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright
+.playwright-mcp/
+
+# CatBoost training artifacts
+catboost_info/
+
+# References (separate git repos)
+references/
+__pycache__/
