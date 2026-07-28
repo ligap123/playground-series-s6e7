@@ -1,6 +1,8 @@
 # Predicting Student Health Risk — Playground Series S6E7
 
-Kaggle Playground Series Season 6 Episode 7 竞赛方案。
+> 🎨 **[点击查看交互式可视化分析报告](https://ligap123.github.io/playground-series-s6e7/report.html)** — 滚动动画 · Chart.js 图表 · 完整数据故事
+
+Kaggle Playground Series Season 6 Episode 7 竞赛方案。Public Score: **0.94918**。
 
 ## 竞赛信息
 
