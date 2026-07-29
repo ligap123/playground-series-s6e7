@@ -1,6 +1,6 @@
 <!--
   Predicting Student Health Risk — 交互式可视化分析报告
-  Kaggle Playground S6E7 | Public Score: 0.94918
+  Kaggle Playground S6E7 | Public Score: 0.94990
   叙事逻辑: 是什么 → 有什么 → 发现了什么 → 做了什么 → 得到了什么
 -->
 <!DOCTYPE html>
@@ -307,7 +307,7 @@ h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;color:var(--text-primary)}
     </div>
     <div class="compare-card ours">
       <div style="font-size:.72rem;color:var(--accent-green);letter-spacing:.1em">🏆 本项目</div>
-      <div class="big">0.94918</div>
+      <div class="big">0.94990</div>
       <div class="sub">LGBM + CatBoost 等权融合</div>
     </div>
     <div class="compare-card">
@@ -321,7 +321,7 @@ h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;color:var(--text-primary)}
     <div class="card">
       <h3 style="color:var(--accent-green)">核心结论</h3>
       <p style="line-height:1.8">
-        ① 最终 Public Score <strong style="color:var(--accent-green)">0.94918</strong>，与最优方案差距仅 0.0009<br>
+        ① 最终 Public Score <strong style="color:var(--accent-green)">0.94990</strong>，与最优方案差距仅 0.0009<br>
         ② 验证集上 LightGBM 取得 <strong style="color:var(--accent-green)">0.9497</strong> 的 Balanced Accuracy<br>
         ③ 如增加多种子集成 + 优化融合权重，预计可达 <strong style="color:var(--accent-amber)">0.950+</strong>
       </p>
@@ -350,7 +350,7 @@ h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;color:var(--text-primary)}
     <div class="tl-item"><div class="phase">阶段 2</div><h4>探索性数据分析</h3><p>发现 85.87% 类别不平衡、缺失率 train/test 一致、sleep_duration 为最强特征</p></div>
     <div class="tl-item"><div class="phase">阶段 3</div><h4>特征工程</h3><p>设计 Missing Indicators、Missing Count、中位数填充与标签编码，13 维 → 27 维</p></div>
     <div class="tl-item"><div class="phase">阶段 4</div><h4>建模与对比</h3><p>训练 5 个 Baseline，LightGBM 最佳 (BA 0.9497)，与 CatBoost 等权融合</p></div>
-    <div class="tl-item"><div class="phase">阶段 5</div><h4>提交与文档</h3><p>Kaggle 提交获 Public Score 0.94918，编写完整技术文档与交互式分析报告</p></div>
+    <div class="tl-item"><div class="phase">阶段 5</div><h4>提交与文档</h3><p>Kaggle 提交获 Public Score 0.94990，编写完整技术文档与交互式分析报告</p></div>
   </div>
 </div>
 </section>
