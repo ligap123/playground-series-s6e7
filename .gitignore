@@ -1,48 +1,31 @@
-# Python
+# Data files (large, from Kaggle)
+data/train.csv
+data/test.csv
+data/sample_submission.csv
+data/train_sample220k.parquet
+
+# Python cache
 __pycache__/
-*.py[cod]
-*.so
-.Python
+*.pyc
+*.pyo
 *.egg-info/
-dist/
-build/
-.eggs/
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb
-
-# Virtual environments
-.venv/
-venv/
-env/
-
-# Data (不提交竞赛数据)
-data/*.csv
-data/*.zip
-
-# Outputs
+# Outputs (large binary)
+outputs/predictions/*.npy
 outputs/models/
-outputs/predictions/*.csv
-outputs/*.parquet
-outputs/*.npy
+outputs/figures/
+
+# CatBoost info
+catboost_info/
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
-*.swo
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Playwright
+# Playwright/MCP temp
 .playwright-mcp/
-
-# CatBoost training artifacts
-catboost_info/
-
-# References (separate git repos)
-references/
-__pycache__/

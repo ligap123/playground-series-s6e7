@@ -1,0 +1,40 @@
+{
+  "best_strategy": "A) equal_4way",
+  "oof_ba": 0.9491938971601993,
+  "all_results": [
+    [
+      "A) equal_4way",
+      0.9491938971601993
+    ],
+    [
+      "B) lgbm3+cb_eq",
+      0.9489112826998561
+    ],
+    [
+      "C) lgbm3_only",
+      0.9490649302969375
+    ],
+    [
+      "D) best_w=0.75",
+      0.9491938971601993
+    ],
+    [
+      "E) rank_avg",
+      0.7942141469749645
+    ]
+  ],
+  "single_model_bas": {
+    "lgbm_s42": 0.9484458434291324,
+    "lgbm_s2026": 0.9489129471619174,
+    "lgbm_s3407": 0.948380739975489,
+    "cb_s42": 0.9486225250543189
+  },
+  "n_models": 4,
+  "classes": [
+    "at-risk",
+    "fit",
+    "unhealthy"
+  ],
+  "eval_on": "220K sample",
+  "test_on": "295K full test"
+}
