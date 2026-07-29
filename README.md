@@ -1,58 +1,76 @@
 # Predicting Student Health Risk — Playground Series S6E7
 
-**Kaggle Public Score: 0.94990** | LGBM(3-seed) + CatBoost Ensemble
+> 🎨 **[点击查看交互式可视化分析报告](https://ligap123.github.io/playground-series-s6e7/report.html)** — 滚动动画 · Chart.js 图表 · 完整数据故事
 
-## Overview
+Kaggle Playground Series Season 6 Episode 7 竞赛方案。**Public Score: 0.94990**。
 
-Multi-class classification (at-risk / fit / unhealthy) on synthetic student health data. 5-fold StratifiedKFold OOF validation with fold-local preprocessing and missing indicator features.
+## 竞赛信息
 
-## Results
+- **竞赛**: [Predicting Student Health Risk](https://www.kaggle.com/competitions/playground-series-s6e7)
+- **题型**: 多分类 (3 类: `at-risk`, `unhealthy`, `fit`)
+- **评估指标**: Balanced Accuracy
+- **数据来源**: 基于 College Student Health Behavior Dataset 的合成数据
+- **截至时间**: 2026-07-31
 
-| Strategy | OOF BA | Public Score |
-|----------|--------|-------------|
-| LGBM (seed=42) | 0.948446 | — |
-| LGBM 3-seed avg | 0.949065 | — |
-| CatBoost (seed=42) | 0.948623 | — |
-| **Equal 4-way ensemble** | **0.949194** | **0.94990** |
+## v2 最终方案
 
-## Structure
+| 模型 | OOF BA | 权重 |
+|------|--------|------|
+| LGBM (seed=42) | 0.948446 | 25% |
+| LGBM (seed=2026) | 0.948913 | 25% |
+| LGBM (seed=3407) | 0.948381 | 25% |
+| CatBoost (seed=42) | 0.948623 | 25% |
+| **等权融合** | **0.949194** | — |
+| **Kaggle Public** | **0.94990** | — |
+
+## 版本历史
+
+| 版本 | Public Score | 方法 |
+|------|-------------|------|
+| v1 | 0.94918 | LGBM + CatBoost 简单融合 |
+| **v2** | **0.94990** | LGBM(3-seed) + CatBoost + 5-fold OOF |
+
+## 项目结构
 
 ```
-v2/
-├── src/
-│   ├── config.py          # Config & paths
-│   ├── preprocessing.py   # Fold-local preprocessing
-│   ├── cv.py              # 5-fold OOF framework
-│   ├── tune.py            # Optuna tuning (experimental)
-│   └── hgbc_te.py         # HGBC attempt (abandoned)
-├── notebooks/
-│   ├── stage4_final.py    # Final ensemble & submission
-│   ├── exp_b_optuna.py    # Optuna experiment
-│   └── exp_b_fast.py      # Optuna validation
-├── outputs/
-│   └── predictions/
-│       └── submission.csv # Final submission (295,753 rows)
-├── EXPERIMENTS.md         # Full experiment log
-├── PLAN_v2.md             # Project plan
-└── README.md
+├── PLAN_v2.md           # v2 项目规划
+├── EXPERIMENTS.md       # 完整实验报告
+├── report.html          # 交互式可视化报告 (GitHub Pages)
+├── README.md            # 本文件
+├── src/                 # Python 源代码
+│   ├── config.py        # 配置
+│   ├── cv.py            # 5-fold OOF 验证框架
+│   ├── preprocessing.py # fold-local 防泄漏预处理
+│   ├── tune.py          # Optuna 调参（实验性）
+│   └── hgbc_te.py       # HGBC 尝试（已弃用）
+├── notebooks/           # 执行脚本
+│   ├── stage4_final.py   # 最终融合 + 生成 submission
+│   └── exp_b_*.py        # Optuna 实验脚本
+└── outputs/
+    └── predictions/
+        └── submission.csv
 ```
 
-## Quick Start
+## 快速复现
 
 ```bash
 pip install pandas numpy scikit-learn lightgbm catboost optuna
-cd v2
 python notebooks/stage4_final.py
 ```
 
-## Key Decisions
+## 关键技术
 
-- **Multi-seed LGBM** (+0.0006) — 3 seeds (42/2026/3407) reduce variance
-- **CatBoost** (+0.0002) — marginal but consistent gain
-- **Simple average beats weighted** — equal 4-way = optimal w=0.75
-- **Optuna tuning discarded** — overfit on sample, no gain on full OOF
-- **HGBC discarded** — severe underperformance (-0.02)
+1. **缺失指示特征** (Missing Indicators): 为每个特征创建二值缺失标记 — 最关键特征工程
+2. **fold-local 预处理**: 防止交叉验证中的数据泄漏
+3. **多种子集成**: 3 个 LGBM 种子降低方差 (+0.0006 vs 单种子)
+4. **balanced class_weight**: 处理严重类别不平衡 (85.87% vs 5.77%)
+5. **等权融合**: 简单平均优于复杂权重搜索
 
-## License
+## 实验记录
 
-MIT
+详见 [EXPERIMENTS.md](EXPERIMENTS.md) — 包含 6 个实验的完整数据、决策依据和最终融合策略。
+
+## 参考
+
+- [Stellan-04/predicting-student-health-risk](https://github.com/Stellan-04/predicting-student-health-risk)
+- [stevenleehans/predicting-student-health-risk-s6e7](https://github.com/stevenleehans/predicting-student-health-risk-s6e7)
